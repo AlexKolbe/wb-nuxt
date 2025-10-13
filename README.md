@@ -1,3 +1,6 @@
+# Учебный проект по Nuxt - прикоснёмся на кончиках пальцев.
+Вёрстка-заготовка в репозитории [My-wild](https://github.com/AlexKolbe/My-wild)
+
 # Nuxt Minimal Starter
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
