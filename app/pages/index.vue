@@ -61,12 +61,12 @@
         <div class="row justify-content-between">
           <div class="col-1">
             <button class="slider-button slider-button-prev">
-              <img src="/img/arrow-prev.svg" alt="icon: arrow-prev" />
+              <img src="/images/arrow-prev.svg" alt="icon: arrow-prev" />
             </button>
           </div>
           <div class="col-1">
             <button class="slider-button slider-button-next">
-              <img src="/img/arrow-next.svg" alt="icon: arrow-prev" />
+              <img src="/images/arrow-next.svg" alt="icon: arrow-prev" />
             </button>
           </div>
         </div>
@@ -84,7 +84,11 @@
           </p>
           <button class="button">
             <span class="button-text">View all</span>
-            <img src="/img/arrow.svg" alt="icon: arrow" class="button-icon" />
+            <img
+              src="/images/arrow.svg"
+              alt="icon: arrow"
+              class="button-icon"
+            />
           </button>
         </div>
       </div>
@@ -98,7 +102,11 @@
           </p>
           <button class="button">
             <span class="button-text">View all</span>
-            <img src="/img/arrow.svg" alt="icon: arrow" class="button-icon" />
+            <img
+              src="/images/arrow.svg"
+              alt="icon: arrow"
+              class="button-icon"
+            />
           </button>
         </div>
       </div>
