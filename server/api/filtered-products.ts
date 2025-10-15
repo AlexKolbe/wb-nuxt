@@ -1,19 +1,32 @@
-import { Product } from '../../app/models/products.model';
-
+import { Product } from "~/models/products.model";
 export interface Query {
-	field: keyof Product;
-	name: string;
+  field: keyof Product;
+  name: string;
 }
 
-const getFiltredProducts = (products: Product[], query: Query) => {
-	if(query.field && query.name) {
-		return products.filter((c) => c[query.field] === query.name)
-	}
-		return products
-}
+const getFilteredProducts = (products: Product[], query: Query) => {
+  if (query.field && query.name) {
+    return products.filter((c) => {
+      const key = c[query.field];
 
-export default defineEventHandler( async (event) => {
-	const {field, name}: Query = getQuery(event);
-	const products: Product[] = await $fetch('https://wb-nuxt-default-rtdb.firebaseio.com/data.json')
-	return getFiltredProducts(products, {field, name})
-})
+      if (typeof key === "string") {
+        return key.toLowerCase() === query.name.toLowerCase();
+      } else {
+        return c[query.field] === query.name;
+      }
+    });
+  } else {
+    return products;
+  }
+};
+
+export default defineEventHandler(async (event) => {
+  // https://wb-nuxt-default-rtdb.firebaseio.com/data.json
+
+  const { field, name }: Query = getQuery(event);
+  const products: Product[] = await $fetch(
+    "https://wb-nuxt-default-rtdb.firebaseio.com/data.json"
+  );
+  // await new Promise(resolve => setTimeout(resolve, 1000));
+  return getFilteredProducts(products, { field: field, name: name });
+});

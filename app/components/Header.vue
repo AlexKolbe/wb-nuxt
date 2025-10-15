@@ -2,7 +2,7 @@
   <header class="container header px-4 px-md-0">
     <div class="row justify-content-between align-items-center">
       <div class="col-lg-2 col-6">
-        <NuxtLink to="/">
+        <NuxtLink to="/" class="logo-link">
           <img
             width="128"
             src="/images/logo.svg"
@@ -15,8 +15,8 @@
         <nav>
           <ul class="navigation d-flex justify-content-around">
             <li class="navigation-item" v-for="link in links" :key="link.id">
-              <NuxtLink class="navigation-link" :to="link.route"
-                >{{ link.text }}
+              <NuxtLink :to="link.route" class="navigation-link">
+                {{ link.text }}
               </NuxtLink>
             </li>
           </ul>
@@ -41,7 +41,7 @@
         </div>
       </div>
       <div class="col-lg-2 col-6 d-flex justify-content-end">
-        <button class="button button-cart">
+        <button class="button button-cart" @click="openCart()">
           <img class="button-icon" src="/images/cart.svg" alt="icon: cart" />
           <span class="button-text">Cart</span>
           <span class="button-text cart-count"></span>
@@ -52,37 +52,23 @@
 </template>
 
 <script setup>
+const viewCart = useViewCart();
 let links = ref([
   {
     id: 0,
-    route: {
-      path: "/products",
-      query: {
-        field: "gender",
-        name: "Womens",
-      },
-    },
+    route: { path: "/products", query: { field: "gender", name: "Womens" } },
     text: "Womens",
   },
   {
     id: 1,
-    route: {
-      path: "/products",
-      query: {
-        field: "gender",
-        name: "Mens",
-      },
-    },
+    route: { path: "/products", query: { field: "gender", name: "Mens" } },
     text: "Mens",
   },
   {
     id: 2,
     route: {
       path: "/products",
-      query: {
-        field: "category",
-        name: "Clothing",
-      },
+      query: { field: "category", name: "Clothing" },
     },
     text: "Clothing",
   },
@@ -90,30 +76,27 @@ let links = ref([
     id: 3,
     route: {
       path: "/products",
-      query: {
-        field: "category",
-        name: "Accessories",
-      },
+      query: { field: "category", name: "Accessories" },
     },
     text: "Accessories",
   },
   {
     id: 4,
-    route: {
-      path: "/products",
-      query: {
-        field: "category",
-        name: "Shoes",
-      },
-    },
+    route: { path: "/products", query: { field: "category", name: "Shoes" } },
     text: "Shoes",
   },
-  {
-    id: 5,
-    route: {
-      path: "/products",
-    },
-    text: "All",
-  },
+  { id: 5, route: { path: "/products" }, text: "All" },
 ]);
+
+// const changeLinks =()=>{
+// 	links =[
+// 	{id:5,
+// 	route:{path:"/products"},  text:"All"}
+
+// 	]
+// }
+
+const openCart = () => {
+  viewCart.value = true;
+};
 </script>
