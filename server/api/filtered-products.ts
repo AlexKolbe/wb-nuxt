@@ -1,10 +1,11 @@
-import { Product } from "~/models/products.model";
-export interface Query {
-  field: keyof Product;
+import { IProduct } from "~/models/products.model";
+
+export interface IQuery {
+  field: keyof IProduct;
   name: string;
 }
 
-const getFilteredProducts = (products: Product[], query: Query) => {
+const getFilteredProducts = (products: IProduct[], query: IQuery) => {
   if (query.field && query.name) {
     return products.filter((c) => {
       const key = c[query.field];
@@ -21,12 +22,10 @@ const getFilteredProducts = (products: Product[], query: Query) => {
 };
 
 export default defineEventHandler(async (event) => {
-  // https://wb-nuxt-default-rtdb.firebaseio.com/data.json
-
-  const { field, name }: Query = getQuery(event);
-  const products: Product[] = await $fetch(
-    "https://wb-nuxt-default-rtdb.firebaseio.com/data.json"
+  const { field, name }: IQuery = getQuery(event);
+  const products: IProduct[] = await $fetch(
+    "https://wildberries-data-16ab3-default-rtdb.firebaseio.com/db.json"
   );
-  // await new Promise(resolve => setTimeout(resolve, 1000));
-  return getFilteredProducts(products, { field: field, name: name });
+
+  return getFilteredProducts(products, { field, name });
 });

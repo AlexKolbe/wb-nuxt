@@ -61,12 +61,12 @@
         <div class="row justify-content-between">
           <div class="col-1">
             <button class="slider-button slider-button-prev">
-              <img src="/images/arrow-prev.svg" alt="icon: arrow-prev" />
+              <img src="/img/arrow-prev.svg" alt="icon: arrow-prev" />
             </button>
           </div>
           <div class="col-1">
             <button class="slider-button slider-button-next">
-              <img src="/images/arrow-next.svg" alt="icon: arrow-prev" />
+              <img src="/img/arrow-next.svg" alt="icon: arrow-prev" />
             </button>
           </div>
         </div>
@@ -84,11 +84,7 @@
           </p>
           <button class="button">
             <span class="button-text">View all</span>
-            <img
-              src="/images/arrow.svg"
-              alt="icon: arrow"
-              class="button-icon"
-            />
+            <img src="/img/arrow.svg" alt="icon: arrow" class="button-icon" />
           </button>
         </div>
       </div>
@@ -102,11 +98,7 @@
           </p>
           <button class="button">
             <span class="button-text">View all</span>
-            <img
-              src="/images/arrow.svg"
-              alt="icon: arrow"
-              class="button-icon"
-            />
+            <img src="/img/arrow.svg" alt="icon: arrow" class="button-icon" />
           </button>
         </div>
       </div>
@@ -134,30 +126,26 @@
         </div>
       </div>
     </div>
-
     <div class="row align-items-center mb-4">
       <div class="col-9">
         <h2 class="section-title">New Arrival</h2>
       </div>
-
+      <!-- /.col-9 -->
       <div class="col-3 d-flex justify-content-end">
         <NuxtLink
-          :to="{ path: '/products', query: { field: 'label', name: 'Womens' } }"
+          :to="{ path: '/products', query: { field: 'label', name: 'new' } }"
           class="more"
         >
           View All
         </NuxtLink>
       </div>
     </div>
-
     <div class="short-goods row">
-      <div class="col-lg-3 col-sm-6" v-for="card in data || []" :key="card.id">
-        <!-- .filter(c => c.label.toLowerCase() === 'new').splice(0, 4) -->
+      <div class="col-lg-3 col-sm-6" v-for="card in data" :key="card.id">
         <div class="goods-card">
           <span class="label">{{ titleFormat(card.label) }}</span>
           <img :src="card.img" alt="image: Hoodie" class="goods-image" />
           <h3 class="goods-title">{{ card.name }}</h3>
-
           <p class="goods-description">{{ card.description }}</p>
 
           <button
@@ -173,20 +161,19 @@
 </template>
 
 <script setup lang="ts">
-import type { CartItem } from "~/models/cart-item.model";
-import type { Product } from "~/models/products.model";
+import type { ICartItem } from "../models/cart-item.model";
+import { useCart } from "../composables/states";
+import type { IProduct } from "../models/products.model";
 
-//  const {data} = await useFetch('/db.json')
-
-const cartItems = useState<CartItem[]>("cart", () => []);
 const { data } = await useFetch("/api/new-products");
-const addToCart = (product: Product) => {
-  const findItem = cartItems.value.find((c) => c.id === product.id);
+const cartItems = useCart();
 
+const addToCart = (product: IProduct) => {
+  const findItem = cartItems.value.find((c) => c.id === product.id);
   if (findItem) {
     findItem.count++;
   } else {
-    const newCartItem: CartItem = {
+    const newCartItem: ICartItem = {
       id: product.id,
       name: product.name,
       price: parseInt(product.price),
@@ -194,6 +181,5 @@ const addToCart = (product: Product) => {
     };
     cartItems.value.push(newCartItem);
   }
-  console.log(cartItems);
 };
 </script>

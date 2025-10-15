@@ -7,17 +7,12 @@
         </div>
       </div>
       <div class="row long-goods-list">
-        <div
-          class="col-lg-3 col-sm-6"
-          v-for="card in data"
-          :key="card.id"
-          key="card.id"
-        >
+        <div class="col-lg-3 col-sm-6" v-for="card in data" :key="card.id">
           <div class="goods-card">
-            <span class="label" v-if="card.label">{{
-              titleFormat(card.label)
-            }}</span>
-            <img :src="card.img" :alt="card.name" class="goods-image" />
+            <span class="label" v-if="card.label"
+              >{{ titleFormat(card.label) }}
+            </span>
+            <img :src="card.img" alt="image: Hoodie" class="goods-image" />
             <h3 class="goods-title">{{ card.name }}</h3>
             <p class="goods-description">{{ card.description }}</p>
             <button
@@ -31,45 +26,37 @@
       </div>
     </div>
   </section>
-  {{ route.query.field }} / {{ route.query.value }}
 </template>
 
 <script setup lang="ts">
-import type { CartItem } from "~/models/cart-item.model";
-import type { Product } from "~/models/products.model";
-
 const route = useRoute();
-const cartItems = useState<CartItem[]>("cart", () => []);
-// const { data } = await useFetch('/api/new-products')
-const cartitems = useCart();
+const field = computed(() => route.query.field || "");
+const name = computed(() => route.query.name || "");
+import type { ICartItem } from "../models/cart-item.model";
+import { useCart } from "../composables/states";
+import type { IProduct } from "../models/products.model";
+import { useRoute } from "vue-router";
+const cartItems = useCart();
 
 const { data } = await useAsyncData(
-  "filtred-products",
+  "filtered-products",
   () => {
-    return $fetch("/api/filtred-products", {
-      query: {
-        field: route.query.field,
-        name: route.query.name,
-      },
-    });
+    return $fetch(
+      `/api/filtered-products?field=${field.value}&name=${name.value}`
+    );
   },
-  {
-    watch: [route],
-  }
+  { watch: [field, name] }
 );
+// definePageMeta({
+//   layout: 'custom',
+// })
 
-definePageMeta({
-  layout: "custom",
-});
-//  const {data} = await useFetch('/db.json')
-
-const addToCart = (product: Product) => {
+const addToCart = (product: IProduct) => {
   const findItem = cartItems.value.find((c) => c.id === product.id);
-
   if (findItem) {
     findItem.count++;
   } else {
-    const newCartItem: CartItem = {
+    const newCartItem: ICartItem = {
       id: product.id,
       name: product.name,
       price: parseInt(product.price),
@@ -77,6 +64,5 @@ const addToCart = (product: Product) => {
     };
     cartItems.value.push(newCartItem);
   }
-  console.log(cartItems);
 };
 </script>

@@ -1,16 +1,11 @@
 <template>
-  <div class="overlay show" :class="{ show: viewCart }" id="modal-cart">
+  <div class="overlay show" id="modal-cart">
     <div class="modal">
-      <header
-        class="modal-header"
-        :class="{ 'center-title': cart.length === 0 }"
-      >
-        <h2 class="modal-title">
-          {{ cart.length > 0 ? "Корзина " : "Корзина пуста" }}
-        </h2>
-        <button class="modal-close" @click="closeCart">x</button>
+      <header class="modal-header">
+        <h2 class="modal-title">Cart</h2>
+        <button class="modal-close" @click="closeCart()">x</button>
       </header>
-      <table class="cart-table" v-if="cart.length > 0">
+      <table class="cart-table">
         <colgroup>
           <col class="col-goods" />
           <col class="col-price" />
@@ -28,8 +23,8 @@
             <th colspan="2">Total</th>
           </tr>
         </thead>
-        <tbody class="cart-table__goods">
-          <tr class="cart-item" v-for="item in cart" :key="cart.id">
+        <tbody class="cart-table__goods" v-if="total != 0">
+          <tr class="cart-item" v-for="item in cart" :key="item.id">
             <td>{{ item.name }}</td>
             <td>{{ item.price }}$</td>
             <td>
@@ -51,36 +46,28 @@
             </td>
           </tr>
         </tbody>
+        <tbody class="cart-table__goods" :class="$style.center" v-else>
+          <td colspan="7">
+            <h3 class="modal-title" :class="$style.center">Корзина пуста</h3>
+          </td>
+        </tbody>
         <tfoot>
-          <tr>
-            <th colspan=" 5"></th>
-            <th class="card-table__total" colspan="2">{{ total }} $</th>
+          <tr v-if="total != 0">
+            <th colspan=" 5">Total:</th>
+            <th class="card-table__total" colspan="2">{{ total }}$</th>
           </tr>
         </tfoot>
       </table>
-      <div
-        v-else
-        :style="{
-          textAlign: 'center',
-        }"
-        class="empty-cart-message"
-      >
-        <p>
-          Пуста она, <br /><br />
-          Идем в обход, <br /><br />
-          Весь мир пускай нас подождет
-        </p>
-      </div>
 
-      <form class="modal-form" action="" v-if="cart.length > 0">
+      <form class="modal-form" action="">
         <input
-          class="modal-input"
+          class="modal-input name"
           type="text"
           placeholder="Имя"
           name="nameCustomer"
         />
         <input
-          class="modal-input"
+          class="modal-input phone"
           type="text"
           placeholder="Телефон"
           name="phoneCustomer"
@@ -92,57 +79,42 @@
     </div>
   </div>
 </template>
-<style scoped>
-.center-title {
-  text-align: center;
-  display: flex;
-  justify-content: center;
-}
-</style>
 
 <script setup lang="ts">
-import type { CartItem } from "~/models/cart-item.model";
+import { useCart, useViewCart } from "../composables/states";
+import type { ICartItem } from "../models/cart-item.model";
 
+const viewCart = useViewCart();
+const cart = useCart();
 const total = computed(() =>
-  cart.value.reduce((sum, item) => {
+  cart.value.reduce((sum: number, item: { price: number; count: number }) => {
     return sum + item.price * item.count;
   }, 0)
 );
-const viewCart = useViewCart();
-const cart = useCart();
+console.log(cart.value.length);
 
 const closeCart = () => {
   viewCart.value = false;
 };
-
-const increase = (item: CartItem) => {
+const increase = (item: ICartItem) => {
   const findItem = cart.value.find((c) => c.id === item.id);
   if (findItem) {
-    findItem.count++;
+    item.count++;
   }
 };
-
-const decrease = (item: CartItem) => {
+const decrease = (item: ICartItem) => {
   const findItem = cart.value.find((c) => c.id === item.id);
   if (findItem) {
-    findItem.count--;
+    item.count--;
   }
 };
-const remove = (item: CartItem) => {
-  const findItem = cart.value.find((c) => c.id === item.id);
-  if (findItem) {
-    cart.value = cart.value.filter((c) => c.id !== item.id);
-  }
+const remove = (item: ICartItem) => {
+  cart.value = cart.value.filter((c) => c.id !== item.id);
 };
-
-// const cartTitle = computed(() => {
-//     return cart.value.length > 0 ? 'Cart' : 'Cart is Empty'
-// })
 </script>
 
-<!-- <script setup>
-definePageMeta({
-    ssr: false
-})
-const viewCart = useViewCart()
-</script> -->
+<style module>
+.center {
+  text-align: center;
+}
+</style>

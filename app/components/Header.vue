@@ -5,7 +5,7 @@
         <NuxtLink to="/" class="logo-link">
           <img
             width="128"
-            src="/images/logo.svg"
+            src="/img/logo.svg"
             alt="logo: Willberries"
             class="logo-image"
           />
@@ -15,9 +15,9 @@
         <nav>
           <ul class="navigation d-flex justify-content-around">
             <li class="navigation-item" v-for="link in links" :key="link.id">
-              <NuxtLink :to="link.route" class="navigation-link">
-                {{ link.text }}
-              </NuxtLink>
+              <NuxtLink :to="link.route" class="navigation-link">{{
+                link.text
+              }}</NuxtLink>
             </li>
           </ul>
         </nav>
@@ -36,13 +36,13 @@
             type="button"
             id="button-addon2"
           >
-            <img src="/images/search.png" alt="search" />
+            <img src="/img/search.png" alt="search" />
           </button>
         </div>
       </div>
       <div class="col-lg-2 col-6 d-flex justify-content-end">
         <button class="button button-cart" @click="openCart()">
-          <img class="button-icon" src="/images/cart.svg" alt="icon: cart" />
+          <img class="button-icon" src="/img/cart.svg" alt="icon: cart" />
           <span class="button-text">Cart</span>
           <span class="button-text cart-count"></span>
         </button>
@@ -53,7 +53,7 @@
 
 <script setup>
 const viewCart = useViewCart();
-let links = ref([
+const links = [
   {
     id: 0,
     route: { path: "/products", query: { field: "gender", name: "Womens" } },
@@ -86,17 +86,13 @@ let links = ref([
     text: "Shoes",
   },
   { id: 5, route: { path: "/products" }, text: "All" },
-]);
-
-// const changeLinks =()=>{
-// 	links =[
-// 	{id:5,
-// 	route:{path:"/products"},  text:"All"}
-
-// 	]
-// }
+];
 
 const openCart = () => {
   viewCart.value = true;
+};
+
+const closeCart = () => {
+  viewCart.value = false;
 };
 </script>
